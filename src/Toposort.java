@@ -7,9 +7,14 @@ public class Toposort {
     static int n;
     static int root;
     static ArrayList<ArrayList<Integer>> nodes;
+    static int[] marked;
 
     public static void main(String[] args){
-        readInput("test.txt");
+        readInput("Test.txt");
+        ArrayList<Integer> depthFirstSearch = depthFirst();
+        for (int i = n-1; i >= 0; i--){  // list is in reverse sorted order
+            System.out.println(depthFirstSearch.get(i));  // print out list
+        }
     }
 
     public static void readInput(String f) {
@@ -33,6 +38,38 @@ public class Toposort {
         } catch (FileNotFoundException e) {
             System.out.println( "file not found");
         }
+    }
 
+    // Recursively visits nodes
+    // Outputs current solution to be added to
+    private static ArrayList<Integer> visit(int i, ArrayList<Integer> ret){
+        System.out.println("Called visit at index " + i);  // debug
+        if (marked[i] == 2){  // if node is gray/temporarily marked
+            System.out.println("Cycle detected.");
+        } else if (marked[i] == 0){  // if node is white
+            marked[i] = 2;  // make it gray/temporary mark
+            for (int j = 0; j < nodes.get(i).size(); j++){  // visit adacent nodes
+                ret = visit(nodes.get(i).get(j), ret);
+            }
+            marked[i] = 1;  // make node black/permanently marked
+            ret.add(i);  // add to list
+        }
+        return ret;
+    }
+
+    // Uses depth-first search to sort nodes
+    // Outputs solution
+    public static ArrayList<Integer> depthFirst(){
+        ArrayList<Integer> ret = new ArrayList<>();
+        marked = new int[n];  // keeps track of whether nodes are unmarked (0), marked (1), or temporarily marked (2)
+        for (int i = 0; i < n; i++){  // initialize all to unmarked
+            marked[i] = 0;
+        }
+        for (int i = 0; i < n; i++){  // go through all unmarked nodes
+            if (marked[i] == 0){
+                ret = visit(i, ret);  // start recursive visit
+            }
+        }
+        return ret;
     }
 }

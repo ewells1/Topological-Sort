@@ -10,13 +10,16 @@ public class Toposort {
 
     public static void main(String[] args){
         readInput("Test.txt");
+
+        System.out.println("DFS");
         ArrayList<Integer> depthFirstSearch = depthFirst();
         for (int i = n-1; i >= 0; i--){  // list is in reverse sorted order
             System.out.println(depthFirstSearch.get(i));  // print out list
         }
+
+        System.out.println("Kahn");
         ArrayList<Integer> sorted = kahn();
-        for (int i : sorted)
-            System.out.println(i);
+        sorted.forEach(System.out::println);
     }
 
     public static ArrayList<Integer> kahn() {
@@ -34,24 +37,24 @@ public class Toposort {
         }
 
         //Main Loop
-        Iterator<Integer> S = SHash.iterator();
-        while (SHash.size() != 0) { //While S is non-empty
-            while (S.hasNext()) { //remove a node n from S
-                Integer n = S.next();
-                L.add(n); //add n to tail of L
+        //Iterator<Integer> S = SHash.iterator();
+        while (!SHash.isEmpty()) { //While S is non-empty
+            //L.forEach(System.out::println);
+            Iterator<Integer> tempIter = SHash.iterator();
+            Integer n = tempIter.next(); //remove a node n from S
+            tempIter.remove();
+            L.add(n); //add n to tail of L
 
-                //ArrayList<Integer> m_i = new ArrayList<>( nodes.get(n) ); //Deep copy edges for n
-                Iterator<Integer> m_i = nodes.get(n).iterator(); //edges for n
-                //for (Integer m : m_i) { //for each m with edge from n->m
-                while (m_i.hasNext()) {
-                    Integer m = m_i.next();
-                    m_i.remove(); //remove edge from graph //TODO ensure that removing Object not index
-                    if (!hasIncomingEdges(m)) //if no other edges ->m
-                        SHash.add(m); //add m to S
-                }
+            //ArrayList<Integer> m_i = new ArrayList<>( nodes.get(n) ); //Deep copy edges for n
+            //for (Integer m : m_i) { //for each m with edge from n->m
+            Iterator<Integer> m_i = nodes.get(n).iterator(); //edges for n
+            while (m_i.hasNext()) {
+                Integer m = m_i.next();
+                m_i.remove(); //remove edge from graph //TODO ensure that removing Object not index
+                if (!hasIncomingEdges(m)) //if no other edges ->m
+                    SHash.add(m); //add m to S
             }
         }
-
         return L;
     }
 

@@ -3,9 +3,9 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Toposort {
-    private static int n;
+    private static int n; //nodes
     private static int root;
-    private static int[] marked;
+    private static int[] marked; //Used for DFS
     private static ArrayList<ArrayList<Integer>> nodes; //TODO: make arraylist<hashset<integer>>, dont use a linkedhashset
 
     public static void main(String[] args){
@@ -24,7 +24,7 @@ public class Toposort {
 
     public static ArrayList<Integer> kahn() {
         ArrayList<Integer> L = new ArrayList<>();
-        LinkedHashSet<Integer> S = new LinkedHashSet<>();
+        HashSet<Integer> S = new HashSet<>();
 
         //Gather set S
         HashSet<Integer> temp = new HashSet<>(); //gather opposite set

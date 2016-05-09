@@ -7,19 +7,34 @@ public class Toposort {
     private static int root;
     private static int[] marked; //Used for DFS
     private static ArrayList<ArrayList<Integer>> nodes; //TODO: make arraylist<hashset<integer>>, dont use a linkedhashset
+    private static boolean verbose = false;
 
     public static void main(String[] args){
-        readInput("Test.txt");
+        //readInput("Test.txt");
+        readInput(args[0]);
+        if (args.length > 1)
+            verbose = (args[1] == "--verbose");
 
-        System.out.println("DFS");
+        if (verbose)
+            System.out.println("DFS");
+        long start = System.nanoTime();
         ArrayList<Integer> depthFirstSearch = depthFirst();
-        for (int i = n-1; i >= 0; i--){  // list is in reverse sorted order
-            System.out.println(depthFirstSearch.get(i));  // print out list
+        long end = System.nanoTime();
+        System.out.println(end-start); //print time consumed in nanoseconds
+        if (verbose) {
+            for (int i = n - 1; i >= 0; i--) {  // list is in reverse sorted order
+                System.out.println(depthFirstSearch.get(i));  // print out list
+            }
         }
 
-        System.out.println("Kahn");
+        if (verbose)
+            System.out.println("Kahn");
+        start = System.nanoTime();
         ArrayList<Integer> sorted = kahn();
-        sorted.forEach(System.out::println);
+        end = System.nanoTime();
+        System.out.println(end-start); //print time consumed in nanoseconds
+        if (verbose)
+            sorted.forEach(System.out::println);
     }
 
     public static ArrayList<Integer> kahn() {
@@ -27,6 +42,7 @@ public class Toposort {
         HashSet<Integer> S = new HashSet<>();
 
         //Gather set S
+        // TODO: stream api distinct() collect() filter()
         HashSet<Integer> temp = new HashSet<>(); //gather opposite set
         for (ArrayList<Integer> i : nodes) {
             temp.addAll(i);
@@ -56,6 +72,7 @@ public class Toposort {
 
     private static boolean hasIncomingEdges(Integer node) {
         //TODO: refactor with hashes
+        //TODO: streams
         for (ArrayList<Integer> n : nodes) {
             if (n.contains(node))
                 return true;
@@ -90,7 +107,8 @@ public class Toposort {
     // Recursively visits nodes
     // Outputs current solution to be added to
     private static ArrayList<Integer> visit(int i, ArrayList<Integer> ret){
-        System.out.println("Called visit at index " + i);  // debug
+        if (verbose)
+            System.out.println("Called visit at index " + i);  // debug
         if (marked[i] == 2){  // if node is gray/temporarily marked
             System.out.println("Cycle detected.");
         } else if (marked[i] == 0){  // if node is white

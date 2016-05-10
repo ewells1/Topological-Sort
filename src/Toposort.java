@@ -11,9 +11,20 @@ public class Toposort {
 
     public static void main(String[] args){
         //readInput("Test.txt");
-        readInput(args[0]);
+        if (args.length == 0) {
+            System.out.println("Use as 'java Toposort edges.txt [--verbose]'");
+            System.out.println("Outputs \n #nodes \n #edges \n DFS nseconds \n Kahn nseconds ");
+            System.exit(1);
+        }
         if (args.length > 1)
             verbose = (args[1] == "--verbose");
+        readInput(args[0]);
+
+        System.out.println(n); //Print the number of nodes first
+        int edges=0;
+        for (ArrayList<Integer> node : nodes)
+            edges+=node.size();
+        System.out.println(edges); //Print number of edges
 
         if (verbose)
             System.out.println("DFS");

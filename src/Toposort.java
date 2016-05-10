@@ -95,7 +95,7 @@ public class Toposort {
     public static void readInput(String f) {
         try {
             Scanner inp = new Scanner(new File(f));
-            n = Integer.parseInt(inp.nextLine()); //number of nodes
+            n = 1 + Integer.parseInt(inp.nextLine()); //number of nodes
             root = Integer.parseInt(inp.nextLine()); //root node
 
             nodes = new ArrayList<>(); //Setup nodes data structure

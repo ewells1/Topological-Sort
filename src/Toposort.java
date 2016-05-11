@@ -4,13 +4,14 @@ import java.util.*;
 
 public class Toposort {
     private static int n; //nodes
-    private static int root;
+    private static int root; //root node; unused.
     private static int[] marked; //Used for DFS
-    private static ArrayList<ArrayList<Integer>> nodes; //TODO: make arraylist<hashset<integer>>, dont use a linkedhashset
-    private static boolean verbose = false;
+    private static boolean verbose = false; //default cli
+
+    //Adjacency list style representation of edges
+    private static ArrayList<ArrayList<Integer>> nodes; 
 
     public static void main(String[] args){
-        //readInput("Test.txt");
         if (args.length == 0) {
             System.out.println("Use as 'java Toposort edges.txt [--verbose]'");
             System.out.println("Outputs \n #nodes \n #edges \n DFS nseconds \n Kahn nseconds ");
@@ -48,14 +49,15 @@ public class Toposort {
             sorted.forEach(System.out::println);
     }
 
+    //Perform Kahn's algorithm on static nodes
+    //returns correct ordering in ArrayList<Integer>
     public static ArrayList<Integer> kahn() {
-        ArrayList<Integer> L = new ArrayList<>();
-        HashSet<Integer> S = new HashSet<>();
+        ArrayList<Integer> L = new ArrayList<>(); //Maintain final sorted list
+        HashSet<Integer> S = new HashSet<>(); //temporary set of nodes w/o parents
 
         //Gather set S
-        // TODO: stream api distinct() collect() filter()
         HashSet<Integer> temp = new HashSet<>(); //gather opposite set
-        for (ArrayList<Integer> i : nodes) {
+        for (ArrayList<Integer> i : nodes) { //all outgoing edges
             temp.addAll(i);
         }
         for (int i = 0; i < n; i++) { //Set subtract to nodes w/o incoming edges
@@ -65,7 +67,8 @@ public class Toposort {
 
         //Main Loop
         while (!S.isEmpty()) { //While S is non-empty
-            Iterator<Integer> STempIter = S.iterator();
+            //access set with temporary iterator iterating
+            Iterator<Integer> STempIter = S.iterator(); 
             Integer n = STempIter.next();
             STempIter.remove(); //remove a node n from S
             L.add(n); //add n to tail of L
@@ -81,10 +84,10 @@ public class Toposort {
         return L;
     }
 
+    //Determines if there are any remaining edges incoming to node
+    //Takes an integer representing the node in question
     private static boolean hasIncomingEdges(Integer node) {
-        //TODO: refactor with hashes
-        //TODO: streams
-        for (ArrayList<Integer> n : nodes) {
+        for (ArrayList<Integer> n : nodes) { //search linearly for any incoming edges
             if (n.contains(node))
                 return true;
         }
@@ -92,7 +95,7 @@ public class Toposort {
     }
 
 
-    // Reads information about a graph from a file and puts it into global variables
+    // Reads information about a graph from a file and puts it into static variables
     // Takes file name as parameter
     public static void readInput(String f) {
         try {

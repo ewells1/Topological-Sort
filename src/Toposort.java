@@ -17,7 +17,7 @@ public class Toposort {
             System.exit(1);
         }
         if (args.length > 1)
-            verbose = (args[1] == "--verbose");
+            verbose = (args[1].equals("--verbose"));
         readInput(args[0]);
 
         System.out.println(n); //Print the number of nodes first
@@ -92,6 +92,8 @@ public class Toposort {
     }
 
 
+    // Reads information about a graph from a file and puts it into global variables
+    // Takes file name as parameter
     public static void readInput(String f) {
         try {
             Scanner inp = new Scanner(new File(f));
@@ -115,11 +117,13 @@ public class Toposort {
         }
     }
 
-    // Recursively visits nodes
-    // Outputs current solution to be added to
+    // Recursively visits nodes for DFS
+    // When done visiting a node, appends it to list of sorted nodes
+    // Takes index of node to visit and current list of sorted nodes as parameters
+    // Outputs current list of sorted nodes
     private static ArrayList<Integer> visit(int i, ArrayList<Integer> ret){
-        if (verbose)
-            System.out.println("Called visit at index " + i);  // debug
+        // if (verbose)
+            // System.out.println("Called visit at index " + i);  // debug
         if (marked[i] == 2){  // if node is gray/temporarily marked
             System.out.println("Cycle detected.");
         } else if (marked[i] == 0){  // if node is white
@@ -136,7 +140,7 @@ public class Toposort {
     // Uses depth-first search to sort nodes
     // Outputs solution
     public static ArrayList<Integer> depthFirst(){
-        ArrayList<Integer> ret = new ArrayList<>();
+        ArrayList<Integer> ret = new ArrayList<>(); // list of sorted nodes
         marked = new int[n];  // keeps track of whether nodes are unmarked (0), marked (1), or temporarily marked (2)
         for (int i = 0; i < n; i++){  // initialize all to unmarked
             marked[i] = 0;
